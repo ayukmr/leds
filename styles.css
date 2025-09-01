@@ -1,0 +1,36 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #1a1a1a;
+}
+
+canvas {
+  display: block;
+}
+
+#reload {
+  position: absolute;
+
+  right: calc(45vw + 10px);
+  top: 10px;
+
+  border: none;
+  padding: 2px 4px;
+  background: #fff;
+
+  font-size: 14px;
+  font-family: 'Helvetica Neue';
+}
+
+#reload:active {
+  background: #ccc;
+}
+
+#editor {
+  float: right;
+
+  width: calc(45vw - 10px);
+  height: calc(100vh - 20px);
+
+  margin: 10px 10px 10px 0;
+}
