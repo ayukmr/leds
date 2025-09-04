@@ -4,14 +4,8 @@ import * as monaco from 'monaco-editor';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
-const code = `function clamp(strength) {
-  return Math.max(0, Math.min(1, strength))
-}
-
-const PerlinNoise = new function(){function r(r){return r*r*r*(r*(6*r-15)+10)}function o(r,o,n){return o+r*(n-o)}function n(r,o,n,t){var f=15&r,a=f<8?o:n,u=f<4?n:12==f||14==f?o:t;return(1&f?-a:a)+(2&f?-u:u)}this.noise=function(t,f,a){var u=new Array(512),e=[151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];for(let r=0;r<256;r++)u[256+r]=u[r]=e[r];var h=255&Math.floor(t),i=255&Math.floor(f),l=255&Math.floor(a);t-=Math.floor(t),f-=Math.floor(f),a-=Math.floor(a);var M=r(t),c=r(f),v=r(a),s=u[h]+i,w=u[s]+l,y=u[s+1]+l,A=u[h+1]+i,b=u[A]+l,d=u[A+1]+l;return(1+o(v,o(c,o(M,n(u[w],t,f,a),n(u[b],t-1,f,a)),o(M,n(u[y],t,f-1,a),n(u[d],t-1,f-1,a))),o(c,o(M,n(u[w+1],t,f,a-1),n(u[b+1],t-1,f,a-1)),o(M,n(u[y+1],t,f-1,a-1),n(u[d+1],t-1,f-1,a-1)))))/2}};
-
-let strength = PerlinNoise.noise(time, height * 5 + time * 2, 0.5) ** 2.5
-strength += height * 1.2 - 0.5
+const code = `let strength = noise(time, height * 5 + time * 2, 0.5) ** 2.5;
+strength += height * 1.2 - 0.5;
 
 const r = clamp(strength * 2 - 0.5) * 255;
 const g = clamp(strength * 4 - 3) * 255;
@@ -21,7 +15,13 @@ return [r, g, b];`;
 
 let cam, scene, rnd, controls, strips;
 
-let sample = new Function('height', 'time', code);
+function clamp(strength) {
+  return Math.max(0, Math.min(1, strength))
+}
+
+const Noise = new function(){function r(r){return r*r*r*(r*(6*r-15)+10)}function o(r,o,n){return o+r*(n-o)}function n(r,o,n,t){var f=15&r,a=f<8?o:n,u=f<4?n:12==f||14==f?o:t;return(1&f?-a:a)+(2&f?-u:u)}this.noise=function(t,f,a){var u=new Array(512),e=[151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];for(let r=0;r<256;r++)u[256+r]=u[r]=e[r];var h=255&Math.floor(t),i=255&Math.floor(f),l=255&Math.floor(a);t-=Math.floor(t),f-=Math.floor(f),a-=Math.floor(a);var M=r(t),c=r(f),v=r(a),s=u[h]+i,w=u[s]+l,y=u[s+1]+l,A=u[h+1]+i,b=u[A]+l,d=u[A+1]+l;return(1+o(v,o(c,o(M,n(u[w],t,f,a),n(u[b],t-1,f,a)),o(M,n(u[y],t,f-1,a),n(u[d],t-1,f-1,a))),o(c,o(M,n(u[w+1],t,f,a-1),n(u[b+1],t-1,f,a-1)),o(M,n(u[y+1],t,f-1,a-1),n(u[d+1],t-1,f-1,a-1)))))/2}};
+
+let sample = new Function('height', 'time', 'clamp', 'noise', code);
 let time = 0;
 
 initScene();
@@ -130,7 +130,7 @@ function initEditor() {
 
   document.getElementById('reload')
     .addEventListener('click', () => {
-      sample = new Function('height', 'time', editor.getValue());
+      sample = new Function('height', 'time', 'clamp', 'noise', editor.getValue());
     });
 }
 
@@ -249,7 +249,7 @@ function sampleArray(h) {
   const colors = [];
 
   for (let i = 0; i < h; i++) {
-    const [r, g, b] = sample(i / (h - 1), time);
+    const [r, g, b] = sample(i / (h - 1), time, clamp, Noise.noise);
     const hex = (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
 
     colors.push(hex);
