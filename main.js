@@ -128,10 +128,16 @@ function initEditor() {
     }
   );
 
-  document.getElementById('reload')
-    .addEventListener('click', () => {
-      sample = new Function('height', 'time', 'clamp', 'noise', editor.getValue());
-    });
+  const reload = () => {
+    sample = new Function('height', 'time', 'clamp', 'noise', editor.getValue());
+  };
+
+  editor.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+    reload
+  );
+
+  document.getElementById('reload').addEventListener('click', reload);
 }
 
 function load(path) {
