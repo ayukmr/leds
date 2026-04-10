@@ -11,7 +11,7 @@ impl Camera {
         let aspect = width as f32 / height as f32;
         let target = Vec3::new(0.65, 0.6, -0.7);
 
-        let off = (Mat4::from_rotation_y(self.yaw) * Mat4::from_rotation_x(0.0)).transform_vector3(Vec3::Z * self.dist);
+        let off = Mat4::from_rotation_y(self.yaw).transform_vector3(Vec3::Z * self.dist);
 
         let pos = target + off;
 
