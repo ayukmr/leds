@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fs;
 
 use bytemuck::{Pod, Zeroable};
 use wgpu::util::DeviceExt;
@@ -20,7 +19,6 @@ pub struct Model {
 }
 
 pub fn load(device: &wgpu::Device, obj: &str, mtl: &str, trns: Mat4) -> Model {
-    let mtl = fs::read_to_string(mtl).unwrap();
     let mut mtls = HashMap::new();
 
     let mut cur_mtl: Option<&str> = None;
@@ -68,7 +66,6 @@ pub fn load(device: &wgpu::Device, obj: &str, mtl: &str, trns: Mat4) -> Model {
     let mut vpos = Vec::new();
     let mut vlookup = HashMap::new();
 
-    let obj = fs::read_to_string(obj).unwrap();
     let mut cur = None;
 
     for line in obj.lines().collect::<Vec<_>>() {

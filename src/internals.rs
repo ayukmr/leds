@@ -66,15 +66,15 @@ impl Internals {
 
         let led = obj::load(
             &device,
-            "models/led.obj",
-            "models/led.mtl",
+            include_str!("models/led.obj"),
+            include_str!("models/led.mtl"),
             Mat4::from_scale(Vec3::splat(0.03)),
         );
 
         let robor = obj::load(
             &device,
-            "models/robor.obj",
-            "models/robor.mtl",
+            include_str!("models/robor.obj"),
+            include_str!("models/robor.mtl"),
             Mat4::from_rotation_x(std::f32::consts::FRAC_PI_2) * Mat4::from_scale(Vec3::splat(2.0)),
         );
 
