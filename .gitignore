@@ -3,6 +3,3 @@
 Cargo.lock
 debug/
 target/
-
-*.obj
-*.mtl
