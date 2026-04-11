@@ -14,13 +14,13 @@ struct VertexOut {
 @vertex fn vtx(@builtin(instance_index) idx: u32, in: VertexIn) -> VertexOut {
   let light = lights.lights[idx];
   let pos = light.pos + rotate(in.pos, light.yaw);
-  let wnormal = normalize(rotate(in.normal, light.yaw));
+  let normal = normalize(rotate(in.normal, light.yaw));
 
   return VertexOut(
     camera.mvp * vec4(pos, 1.0),
     vec4(light.color, 1.0),
     pos,
-    wnormal,
+    normal,
   );
 }
 
